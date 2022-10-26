@@ -27,16 +27,16 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
         let img = document.createElement('img');
         img.src = message.data;
         img.addEventListener('load', function() {
-            const canvas = document.createElement('canvas');
-            const WIDTH = Math.abs(start.x - end.x);
-            const HEIGHT = Math.abs(start.y - end.y);
+            var canvas = document.createElement('canvas');
+            var WIDTH = Math.abs(start.x - end.x);
+            var HEIGHT = Math.abs(start.y - end.y);
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
-            const context = canvas.getContext('2d');
+            var context = canvas.getContext('2d');
             context.drawImage(img, start.x < end.x ? start.x : end.x,
                                 start.y < end.y ? start.y : end.y, 
                                 WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
-            const croppedUri = canvas.toDataURL('image/png');
+            var croppedUri = canvas.toDataURL('image/png');
             copyImage(croppedUri);
         });
     }
