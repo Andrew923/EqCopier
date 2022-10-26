@@ -4,20 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.query({ currentWindow: true, active: true },function (tabs) {
         let tabId = tabs[0].id;
         
+        // these are injected in manifest now
         //inject selecting script
-        chrome.scripting.executeScript({
-            target: {tabId: tabId},
-            files: ['scripts/select.js'],
-        },(injectionResults) => {
-            for (const frameResult of injectionResults)
-            console.log('Frame Title: ' + frameResult.result);
-        });
-        
+        // chrome.scripting.executeScript({
+        //     target: {tabId: tabId},
+        //     files: ['scripts/select.js'],
+        // },(injectionResults) => {
+        //     for (const frameResult of injectionResults)
+        //     console.log('Frame Title: ' + frameResult.result);
+        // });
         // inject selecting css
-        chrome.scripting.insertCSS({
-        files: ['select.css'],
-        target: {tabId: tabId}
-        });
+        // chrome.scripting.insertCSS({
+        // files: ['select.css'],
+        // target: {tabId: tabId}
+        // });
         
         // listen for button click
         const button = document.getElementById('button-ss');

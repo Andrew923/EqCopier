@@ -1,7 +1,7 @@
 // waiting to capture image
 chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
   if (message.name === 'capture') {
-    chrome.tabs.captureVisibleTab(null, {format: "png"}, (dataUri) => {
+    chrome.tabs.captureVisibleTab(null, {}, (dataUri) => {
       chrome.tabs.query({currentWindow: true, active : true},
         function(tabArray){
           let tabId = tabArray[0].id;
