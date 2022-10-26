@@ -1,6 +1,10 @@
+// wait for popup to load
 document.addEventListener('DOMContentLoaded', function () {
+    // get id of current tab
     chrome.tabs.query({ currentWindow: true, active: true },function (tabs) {
         let tabId = tabs[0].id;
+        
+        //inject selecting script
         chrome.scripting.executeScript({
             target: {tabId: tabId},
             files: ['scripts/select.js'],
@@ -8,24 +12,18 @@ document.addEventListener('DOMContentLoaded', function () {
             for (const frameResult of injectionResults)
             console.log('Frame Title: ' + frameResult.result);
         });
-
+        
+        // inject selecting css
         chrome.scripting.insertCSS({
         files: ['select.css'],
         target: {tabId: tabId}
         });
-
+        
+        // listen for button click
         const button = document.getElementById('button-ss');
         button.addEventListener('click', function () {
-            // chrome.tabs.sendMessage(tabId, {name: 'button'});
-            const port = chrome.tabs.connect(tabId, {name: "screenshot"});
-            port.postMessage({id: "button-click"});
-            port.onMessage.addListener(function (msg) {
-                if (msg.success) {
-                    alert('woohoo!');
-                } else {
-                    alert('boohoo :(');
-                }
-            });
+            // send a message to the tab under the name 'button'
+            chrome.tabs.sendMessage(tabId, {name: 'button'});
         });
     });
 });
