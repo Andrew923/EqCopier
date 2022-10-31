@@ -1,6 +1,6 @@
 // on first run, injects selection element so 
 // that the css actually does something
-let element = document.createElement("div");
+var element = document.createElement("div");
 element.id = "selection";
 const body = document.querySelector("body");
 body.insertAdjacentElement("beforeend", element);
@@ -33,6 +33,9 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
             var context = canvas.getContext('2d');
+            console.log(start.x < end.x ? start.x : end.x,
+                        start.y < end.y ? start.y : end.y,
+                        WIDTH, HEIGHT);
             context.drawImage(img, start.x < end.x ? start.x : end.x,
                                 start.y < end.y ? start.y : end.y, 
                                 WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
@@ -46,14 +49,13 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
         $(window)
             .on('mousedown', function($event) { 
                 if (selected) { return; }
-                body.onmousedown = "return false";
-                body.onselectstart = "return false";
                 isSelecting = true;
                 $('#selection').removeClass('complete');
                 start.x = $event.pageX;
                 start.y = $event.pageY;
             }).on('mousemove', function($event) {
                 if (selected) { return; }
+                console.log($event.pageX, $event.pageY)
                 if (!isSelecting) { return; }
                 end.x = $event.pageX;
                 end.y = $event.pageY;
@@ -69,8 +71,6 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
             }).one('mouseup', function($event) {
                 if (selected) { return; }
                 isSelecting = false;
-                body.onmousedown = "return true";
-                body.onselectstart = "return true";
                 // make sure capture window isn't too small
                 if (Math.abs($event.pageX - start.x) < 5 || Math.abs($event.pageY - start.y) < 5) {
                     console.log("Capture window too small");

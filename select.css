@@ -1,3 +1,12 @@
+body {
+    -ms-user-select:none;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+     user-select:none;
+ }
+ 
 #selection {
     position: absolute;
     background: #e0eaf1;

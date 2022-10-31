@@ -1,6 +1,6 @@
 body {
     font-family: "Segoe UI";
-    background: rgb(0, 0, 0);
+    background: #121212;
     color: #006daa;
 }
 
@@ -20,6 +20,7 @@ a.button3{
 }
 a.button3:hover{
     background-color:#4095c6;
+    cursor: pointer;
 }
 @media all and (max-width:30em){
     a.button3{
