@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.query({ currentWindow: true, active: true },function (tabs) {
         let tabId = tabs[0].id;
         
-        // these are injected in manifest now
+        // these are injected in manifest now, but might want to change back to here
+        // so that selecting text isn't bugged
+
         //inject selecting script
         // chrome.scripting.executeScript({
         //     target: {tabId: tabId},

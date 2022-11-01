@@ -5,6 +5,10 @@ element.id = "selection";
 const body = document.querySelector("body");
 body.insertAdjacentElement("beforeend", element);
 
+//injects to allow for http requests
+const head = document.querySelector("head");
+head.insertAdjacentHTML("beforeend", "<meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests'>");
+
 // function for copying image to clipboard given url
 async function copyImage(url) {
     var response = await fetch(url);
@@ -33,14 +37,26 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
             canvas.width = WIDTH;
             canvas.height = HEIGHT;
             var context = canvas.getContext('2d');
-            console.log(start.x < end.x ? start.x : end.x,
-                        start.y < end.y ? start.y : end.y,
-                        WIDTH, HEIGHT);
             context.drawImage(img, start.x < end.x ? start.x : end.x,
                                 start.y < end.y ? start.y : end.y, 
                                 WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
             var croppedUri = canvas.toDataURL('image/png');
             copyImage(croppedUri);
+            //sends api request to latexocr
+            const reader = new FileReader();
+            reader.readAsDataURL(croppedUri);
+            reader.onload = function(e) {
+                fetch('http://44.206.243.86/predict/', {method:"POST", body:{file:e.target.result}})
+                    .then(response => console.log(response.text()))
+                    .catch(err => {console.log(err)});
+            };
+
+            //blob way
+            // canvas.toBlob((blob) => {
+            //     fetch('http://44.206.243.86/predict/', {method:"POST", body:{file:blob}})
+            //         .then(response => console.log(response.text()))
+            //         .catch(err => {console.log(err)});
+            // });
         });
     }
     // message from popup.js that button was clicked
@@ -55,7 +71,6 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
                 start.y = $event.pageY;
             }).on('mousemove', function($event) {
                 if (selected) { return; }
-                console.log($event.pageX, $event.pageY)
                 if (!isSelecting) { return; }
                 end.x = $event.pageX;
                 end.y = $event.pageY;
