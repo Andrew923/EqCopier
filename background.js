@@ -13,14 +13,14 @@ function getformData(dataURI) {
   formData.append('file', blob, 'image.png');
   return formData
 }
-
+var tabId = -1;
 // waiting to capture image
 chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
   if (message.name === 'capture') {
     chrome.tabs.captureVisibleTab(null, {}, (dataUri) => {
       chrome.tabs.query({currentWindow: true, active : true},
         function(tabArray){
-          let tabId = tabArray[0].id;
+          tabId = tabArray[0].id;
           // send message back to select.js to crop image
           chrome.tabs.sendMessage(tabId, {name: 'crop', data: dataUri});
         });
@@ -34,7 +34,9 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
     fetch('http://44.206.243.86/predict/',
       {method:'POST', body: formData})
       .then(response => response.text())
-      .then(result => console.log(result))
+      .then(result => {
+        chrome.tabs.sendMessage(tabId, {name:'result', data: String(result).replaceAll('\\\\', '\\')} );
+      })
       .catch(error => console.log('uh ohs: ', error));
   }
 })

@@ -21,30 +21,31 @@ var isSelecting = false;
 
 // message listener
 chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
-    // receive message from background.js to crop image
-    if (message.name === 'crop') {
-        // math to crop image when the image loads
-        let img = document.createElement('img');
-        img.src = message.data;
-        img.addEventListener('load', function() {
-            var canvas = document.createElement('canvas');
-            var WIDTH = Math.abs(start.x - end.x);
-            var HEIGHT = Math.abs(start.y - end.y);
-            canvas.width = WIDTH;
-            canvas.height = HEIGHT;
-            var context = canvas.getContext('2d');
-            context.drawImage(img, start.x < end.x ? start.x : end.x,
-                                start.y < end.y ? start.y : end.y, 
-                                WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
-            var croppedUri = canvas.toDataURL('image/png');
-            copyImage(croppedUri);
-            chrome.runtime.sendMessage({name: "POST", data: croppedUri});
-        });
-    }
-    // message from popup.js that button was clicked
-    else if (message.name === 'button') {
-        // jQuery to select window
-        $(window)
+    switch(message.name) {
+        // receive message from background.js to crop image
+        case "crop":
+            // math to crop image when the image loads
+            let img = document.createElement('img');
+            img.src = message.data;
+            img.addEventListener('load', function() {
+                var canvas = document.createElement('canvas');
+                var WIDTH = Math.abs(start.x - end.x);
+                var HEIGHT = Math.abs(start.y - end.y);
+                canvas.width = WIDTH;
+                canvas.height = HEIGHT;
+                var context = canvas.getContext('2d');
+                context.drawImage(img, start.x < end.x ? start.x : end.x,
+                                    start.y < end.y ? start.y : end.y, 
+                                    WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
+                var croppedUri = canvas.toDataURL('image/png');
+                copyImage(croppedUri);
+                chrome.runtime.sendMessage({name: "POST", data: croppedUri});
+            });
+            break;
+        // message from popup.js that button was clicked
+        case "button":
+            // jQuery to select window
+            $(window)
             .on('mousedown', function($event) { 
                 if (selected) { return; }
                 isSelecting = true;
@@ -69,7 +70,7 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
                 if (selected) { return; }
                 isSelecting = false;
                 // make sure capture window isn't too small
-                if (Math.abs($event.pageX - start.x) < 5 || Math.abs($event.pageY - start.y) < 5) {
+                if (Math.abs(end.x - start.x) < 5 || Math.abs(end.y - start.y) < 5) {
                     console.log("Capture window too small");
                     $('#selection').css({
                         left: 0,
@@ -83,6 +84,14 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
                     // send message to background.js to capture entire screen
                     chrome.runtime.sendMessage({name: 'capture'});
                 }
-        });   
+            });
+            break;
+        // result 
+        case "result":
+            let latex = message.data;
+            console.log(latex);
+            alert(latex);
+            break;
     }
+    
 });
