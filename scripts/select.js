@@ -57,6 +57,8 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
                 if (!isSelecting) { return; }
                 end.x = $event.clientX;
                 end.y = $event.clientY;
+                //debugging purposes
+                console.log("X: " + start.x + "-" + end.x + " Y: " + start.y + "-" + end.y);
                 width = Math.abs(start.x - end.x);
                 height = Math.abs(start.y - end.y);
                 
@@ -69,21 +71,10 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
             }).one('mouseup', function($event) {
                 if (selected) { return; }
                 isSelecting = false;
-                // make sure capture window isn't too small
-                if (Math.abs(end.x - start.x) < 5 || Math.abs(end.y - start.y) < 5) {
-                    console.log("Capture window too small");
-                    $('#selection').css({
-                        left: 0,
-                        top: 0,
-                        width: 0,
-                        height: 0
-                    });
-                } else {
-                    $('#selection').addClass('complete');
-                    selected = true;
-                    // send message to background.js to capture entire screen
-                    chrome.runtime.sendMessage({name: 'capture'});
-                }
+                $('#selection').addClass('complete');
+                selected = true;
+                // send message to background.js to capture entire screen
+                chrome.runtime.sendMessage({name: 'capture'});
             });
             break;
         // result 

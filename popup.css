@@ -1,7 +1,22 @@
+input{
+    border:none;
+    outline:none;
+    display:inline-block;
+    height:34px;
+    vertical-align:middle;
+    position:relative;
+    bottom:14px;
+    right:9px;
+    border-radius:22px;
+    width:220px;
+    box-sizing:border-box;
+    padding:0 18px; 
+}
+
 body {
-    font-family: "Segoe UI";
-    background: #121212;
-    color: #006daa;
+    font-family: "tahoma";
+    background: #ebf2fa;
+    color: #ebf2fa;
 }
 
 a.button3{
@@ -11,15 +26,15 @@ a.button3{
     border-radius:2em;
     box-sizing: border-box;
     text-decoration:none;
-    font-family:'Roboto',sans-serif;
+    font-family:'tahoma';
     font-weight:300;
-    color:#FBFFFF;
-    background-color:#31AEF3;
+    color:#ebf2fa;
+    background-color:#4279a1;
     text-align:center;
     transition: all 0.2s;
 }
 a.button3:hover{
-    background-color:#2FA6E8;
+    background-color:#356587;
     cursor: pointer;
 }
 @media all and (max-width:30em){

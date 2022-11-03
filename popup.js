@@ -27,5 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // send a message to the tab under the name 'button'
             chrome.tabs.sendMessage(tabId, {name: 'button'});
         });
+
+        const copyButton = document.getElementById('button-copy');
+        copyButton.addEventListener('click', function () {
+            text = document.getElementById("output");
+            text.select();
+            navigator.clipboard.writeText(text.value);
+        });
     });
 });
