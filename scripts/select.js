@@ -50,13 +50,13 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
                 if (selected) { return; }
                 isSelecting = true;
                 $('#selection').removeClass('complete');
-                start.x = $event.pageX;
-                start.y = $event.pageY;
+                start.x = $event.clientX;
+                start.y = $event.clientY;
             }).on('mousemove', function($event) {
                 if (selected) { return; }
                 if (!isSelecting) { return; }
-                end.x = $event.pageX;
-                end.y = $event.pageY;
+                end.x = $event.clientX;
+                end.y = $event.clientY;
                 width = Math.abs(start.x - end.x);
                 height = Math.abs(start.y - end.y);
                 

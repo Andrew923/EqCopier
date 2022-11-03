@@ -8,7 +8,7 @@ body {
  }
  
 #selection {
-    position: absolute;
+    position: fixed;
     background: #e0eaf1;
     border: 1px solid #0c65a5;
     opacity: 0.5;
